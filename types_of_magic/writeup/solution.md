@@ -1,4 +1,4 @@
-Otrzymany plik jest tak naprawde zipem, a nie txt. By dostać się do flagi należy przejść kolejne kroki:
+The file is actually a `.zip` file, not a `.txt` one. To get the flag following commands must be executed:
 
 ```
 mv flag.txt flag.zip
@@ -28,9 +28,8 @@ lzop -d flag.lzo
 
 Otrzymujemy plik `flag`. Należy zmienić jego rozszerzenie na `.png` oraz należy zedytować nagłówek, tak aby wyświetlił zdjęcie:
 
-- 11 bajt: `FF -> 00`
+- 11 byte: `FF -> 00`
 - `IDHR -> IHDR`
 - `IDED -> IDAT`
 
-
-Flaga: `zeroday{th3r3_are_m4ny_typ3s_0f_magic}`
+Flag: `zeroday{th3r3_are_m4ny_typ3s_0f_magic}`

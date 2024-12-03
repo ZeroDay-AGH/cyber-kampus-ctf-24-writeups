@@ -1,6 +1,6 @@
-W tym wyzwaniu musimy stworzyć trzy liczby Carmichaela oraz znaleźć ich czynniki pierwsze. Liczby Carmichaela to liczby pseudopierwsze - przechodzą test na liczbę pierwszą, ale są liczbami złożonymi (można je rozłożyć na czynniki).
+In this challenge we need to generate three Carmichael numbers and find its prime factors. Carmichael numbers are pseudorandom numbers - the pass test for prime numbers, but are actually composite numbers (the can be factored).
 
-## Tworzenie liczb pseudopierwszych 
+## Generating pseudorandom numbers
 
 ```python
 """

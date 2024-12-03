@@ -1,17 +1,17 @@
-W tym zadaniu celem jest złamanie podpisu HMAC (sha1) poprzez wykorzystanie podatności rozszerzenia długości podpisu (length extension attack). Użytkownik musi wprowadzić dane wejściowe, które zawierają słowo-klucz "abracadabra", aby wygenerować poprawny podpis i zdobyć flagę.
+To solve this challenge you need to crack a HMAC(sha1) signature by exploiting a length extension attack vulnerability. The user has to provide data containing the word "abracadabra" to generate a valid signature and get the flag.
 
-## Skrypt
+## Script
 
-Skrypt w Pythonie wykorzystuje `hashpumpy` do wykonania ataku rozszerzenia podpisu. Oto jak działa skrypt:
+The python script uses `hashpumps` do perform a length extension attack. This is how it works:
 
-1. **Odbieranie danych**:
-   - Skrypt odbiera oryginalny podpis HMAC (`original_sig`) i oryginalne dane (`original_data`).
-   - Oczekuje na komunikaty informujące o zasadach gry.
-2. **Atak rozszerzenia podpisu**:
-   - Używa funkcji `forge`, aby stworzyć nowe dane i podpis za pomocą metody rozszerzenia HMAC, dodając słowo-klucz "abracadabra".
-   - Wysyła dane do serwera w formacie heksadecymalnym oraz wygenerowany podpis.
-3. **Zakończenie**:
-   - Po udanym ataku skrypt wyświetla flagę.
+1. **Retrieving the data**:
+   - The script retrieves the original signature (`original_sig`) and data (`original_data`).
+   - Then it waits for messages informing about the game rules.
+2. **Length extension attack**:
+   - The script uses `forge` function to generate new data and a sigature using the HMAC extension method, adding the keyword `abracadabra`
+   - It sends the data to the server in hexidecimal format and the generated signature
+3. **Ending**:
+   - After a successful attack th eflag is displayed
 
 ```python
 from pwn import *

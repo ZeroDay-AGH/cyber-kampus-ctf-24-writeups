@@ -1,24 +1,22 @@
-# Writeup do Exploita - `decoder`
+# Writeup for exploit - `rune decoder`
 
-## Cel
+## Goal
 
-Celem było wykorzystanie luki w programie `decoder` do przeprowadzenia ataku, który:
-1. Wypisze adres bazowy `libc`.
-2. Uruchomi powłokę `/bin/sh`.
+The goal was to exploit a gap in `decoder` software to perform an attack, which will:
+1. Show the base address of `libc`.
+2. Run the `/bin/sh` shell. 
 
-### 1. Wyciek adresu `libc`
+### 1. Leak of `libc` location
 
-Aby uzyskać adres bazowy `libc`, wykorzystano funkcję `puts()` oraz tablicę GOT (Global Offset Table).
+To get the base address of `libc`, `puts()` function and GOT (Global Offset Table) were used.
 
-### 2. Wykonanie powłoki `/bin/sh`
+### 2. Execution of `/bin/sh` shell
 
-Po uzyskaniu adresu `libc` program obliczał adres funkcji `system()` i znajdował ciąg `/bin/sh`. Następnie skonstruowano łańcuch ROP, który:
-- Umieszczał wskaźnik do `/bin/sh` w rejestrze `RDI`.
-- Wykonywał instrukcję `ret`, aby przejść do wywołania funkcji `system()`.
+After getting the `libc` address the script calculated the address of `system()` function and found the `/bin/sh` path. Then it constructed a ROP chain, which:
+- Put a pointer to `/bin/sh` in `RDI` registry.
+- Executed `ret` instruction to then execute `system()` function.
 
-## Kod Exploita
-
-Oto szczegółowy kod exploita:
+## Exploit script
 
 ```python
 #!/usr/bin/env python
