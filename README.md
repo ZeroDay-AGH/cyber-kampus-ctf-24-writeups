@@ -5,7 +5,7 @@
 
 | Category |  Difficulty  |     Author    |                              Writeup                                  | 
 -------- | ------------ | ------------- | --------------------------------------------------------------------- |  
-|   **web**    |    easy      |    qualorm    | [trust_issues](web/[Easy]trust_issues/writeup.md)                               |
+|   **web**    |    easy      |    qualorm    | [trust_issues](web/[easy]trust_issues/writeup.md)                               |
 |   **web**    |    medium    |    jbktn      | [ministry_of_magic_vault](web/[Medium]ministry_of_magic_vault/writeup/writeup.md) |
 |   **web**    |    hard      |    cpt        | [archmages_secret](web/[Hard]archmages_secret/writeup/README.md)                |
 |   **crypto**    |    easy   |    qualorm    | [cryptic_cauldron](crypto/[Easy]cryptic_cauldron/writeup/writeup.md)               |           
