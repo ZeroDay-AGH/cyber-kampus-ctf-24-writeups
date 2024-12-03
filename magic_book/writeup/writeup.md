@@ -1,26 +1,29 @@
 # Writeup - Magic Book Challenge
 
-## Opis
-Zdjęcie przedstawia książkę z zaklęciem oraz nutą, która sugeruje, że w obrazie ukryty jest plik audio.
+## Description
+The photo shows a book with a spell and a note that suggests an audio file is hidden in the image.
 
-## Rozwiązanie
-1. Ekstrakcja pliku audio
-Plik audio został ukryty w obrazie przy użyciu steganografii. Aby wydobyć go z pliku `Magic-Book.bmp`, użyjemy narzędzia **Steghide**.  
-Komenda do ekstrakcji:  
-`steghide --extract -sf Magic-Book.bmp`
-2. Odtworzenie pliku audio
-Po wydobyciu pliku audio zauważamy, że dźwięk jest odtwarzany od tyłu. Aby go poprawnie odsłuchać, należy odwrócić go w czasie. Można to zrobić w programie Audacity:
+## Solution
+1. Audio file extraction
+The audio file has been hidden in the image using steganography. To extract it from the `Magic-Book.bmp` file, we will use the **Steghide** tool.  
+The command to extract: \\ 
+`steghide --extract -sf Magic-Book.bmp`.
 
-Załaduj plik audio do programu.
-Wybierz opcję Efekty → Odwróć.
-Odtwórz plik, aby usłyszeć poprawny dźwięk.
-3. Odszyfrowanie fragmentu zaklęcia
-Po odwróceniu nagrania można usłyszeć fragment zaklęcia, które jest zamazane na zdjęciu. Fragment ten zawiera słowo "spektogram", co wskazuje na konieczność analizy pliku audio w postaci spektrogramu.
+2. Play the audio file
+After extracting the audio file, we notice that the audio is played backwards. In order to listen to it properly, it needs to be reversed in time. This can be done in the Audacity program:
 
-4. Analiza spektrogramu
-Kolejnym krokiem jest wyświetlenie pliku audio w formie spektrogramu w Audacity:
+- Load the audio file into the program.
+- Select Effects → Invert.
+- Play the file to hear the correct sound.
 
-Przejdź do zakładki Widok → Spektrogram.
-Powiększ widok spektrogramu, aby dostrzec ukrytą wiadomość.
-W spektrogramie znajduje się ukryta flaga:
+3. Decrypt a fragment of a spell
+After inverting the recording, you can hear a fragment of the spell that is blurred in the picture. This fragment contains the word “spectrogram”, which indicates that you need to analyze the audio file as a spectrogram.
+
+4. Spectogram analysis
+The next step is to view the audio file as a spectrogram in Audacity:
+
+- Go to the View → Spectrogram tab.
+- Zoom in on the spectrogram view to see the hidden message.
+- There is a hidden flag in the spectrogram:
+
 `zeroday{5p3ctr0gram!}`

