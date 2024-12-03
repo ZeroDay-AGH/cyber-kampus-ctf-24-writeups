@@ -1,15 +1,15 @@
-Zadaine polega na nieprawidłowym ustawieniu maski QR kodu. Maska służy do poprawy czytelności QR kodu poprzez stosowanie różnych wzorców, które zmieniają sposób rozmieszczenia bitów w kodzie.
+The tasks revolves around misconfiguration of the QR code' mask. The mask is used to improve readibility of the QR code by using different patterns that change how the bits are arranged in the code
 
-Skrypt rozwiązujący wykonuje następujące kroki:
- - `extract_format_info()` wyciąga informacje o formacie z QR kodu, które są używane do określenia wzoru maski
- - `replace_format_info()` modyfikuje QR kod, zamieniając jego informacje o formacie na nowe, zgodne z wybraną maską
- - `create_qr_code()` generuje kod QR z podanym ciągiem danych i wybraną maską 
+The solution script performs the following steps:
+ - `extract_format_info()` extracts the format information from the QR code, which is used to determine the mask pattern
+ - `replace_format_info()` modifies the QR code, replacing its format information with a new one according to the selected mask
+ - `create_qr_code()` generates a QR code with the given data string and the selected mask 
 
-Główna funkcja `solve()`:
- - Otwiera obraz QR kodu z dysku.
- - Odwraca obraz (aby uzyskać odpowiednią reprezentację QR kodu).
- - Sprawdza wszystkie możliwe 8 wzorców masek, tworząc zmodyfikowane obrazy dla każdego z nich.
- - Zapisuje każdy wynik jako oddzielny plik w katalogu out
+Main function `solve()`:
+ - Opens the QR code image from disk.
+ - Inverts the image (to get the correct representation of the QR code)
+ - Checks all possible 8 mask patterns, creating modified images for each of them.
+ - Saves each result as a separate file in the directory
 
 ```python
 from os import PathLike

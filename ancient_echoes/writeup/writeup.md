@@ -2,16 +2,17 @@
 ## Overview
 ![](attachments/main.png)
 \
-po otworzeniu pliku w idzie jesteśmy od razu zobaczyć, podatność jaką jest format string vulnerability. \
+After opening the file in IDA we can immediately see the vulnerability which is the format string vulnerability. \
 ![](attachments/checksec.png) \
-do tego nie ma aslr, więc kod będzie zawsze na takim samym adresie. Relro jest ustawione jako Partial,  więc będziemy w stanie nadpisać got. \
+For this binary there is no aslr, so the code will always be at the same address. Relro is set as Partial, so we will be able to overwrite GOT. \
 ![](attachments/wild_magic.png)
 \
-możemy też znaleźć, że istnieje nigdzie nie wykorzystywana funkcja wild_magic, która wywołuje system z podaną komendą. 
-## Exploitacja
-skoro mamy dwukrotnie funkcje printf dzięki której jesteśmy w stanie nadpisać dane w goty, to musimy stworzyć taki payload, który jednocześnie nadpisze addres printf w goty do funkcji wykonującej system i odczyta flage z serwera.\
-Zadziała to ponieważ argumentem funkcji system stanie się wtedy nasz payload.\
-kod:
+We can also find that there is a wild_magic function that is not used anywhere, which calls the system with the given command.
+
+## Exploitation
+Since we have the printf function twice thanks to which we are able to overwrite the data in goty, we need to create such a payload that simultaneously overwrites the printf addres in goty to the function that executes system and reads the flag from the server.
+This will work because the argument of the system function will then become our payload.\nThe
+code:
 ```python
 from pwn import process, fmtstr, ELF, context, args
 

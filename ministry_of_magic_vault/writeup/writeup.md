@@ -1,29 +1,28 @@
 # Ministry of magic vault
-(nazwa może byc zmieniona)
 
-1. Po wpisaniu losowych danych do logowania pojawi sie zatępujący komunikat:
+1. After entering random login credentials, the following message will appear:
 `We only accept corrspondency in out office in London`
-Aby obejść to zabezpieczenie należy ustawić w przeglądarce lokalizację na Londyn
-lub dowolną z zakresu
-`latitude 51 -- 52`
-`longtitude -0.13 -- -0.12`
+To bypass this security feature, set your browser location to London
+or any of the following:
+- `latitude 51 -- 52`
+- `longtitude -0.13 -- -0.12`
 <br/>
-Najłatwiej to zrobić poprzez załadkę "sensors" w Google Chrome, ale dane o lokalizacji sa przesyłene w zapytaniu POST, więc tak też można je zmodyfikować
+The easiest way to do this is through the “sensors” loader in Google Chrome, but the location data is sent in a POST request, so you can also modify it this way
 ![chrome](image.png)
 ![burpsuite](image-1.png)
-2. Po pokonaniu poprzedniego zabezpieczenia i ponowanym wpisaniu losowych danych wyświetli sie nastepująca wiadomość:
+2. After bypassing the previous protection and reentering random data, the following message will be displayed:
 `We only accept requests delivered by owls`
-Należy zmienić wartosc nagłówka zapytania `User-Agent` na `Owl` lub `owl`
+You need to change value of `User-Agent` to `Owl` or `owl`
 
-3. Kolejny błąd:
+3. Another error:
 `We demand thy correspondence be written in proper british English`
-Należy ustawić wartośc nagłówka `Accept_Language` na `en-GB`
+Change `Accept_Language` header value to `en-GB`
 <br/>
-Jeżeli użyło się przeglądarki chrome do ustawienia lokalizacju ten nagłówek będzie usatawiony automatycznie
+If you used other browser than chrome to set localization, then this header would be set automatically
 
-4. Kolejny błąd:
+4. Another error:
 `Invalid login credentials`
-Po wejściu na podstrone /robots.txt wyswietli sie ścieżka /passes.txt
-Na niej widać następujące dane logowania
+After entering the /robots.txt subsite the /passes.txt will be displayed.
+Then on the /passes.txt you can find login credentials
 `hpotter@mmin.gov.uk`
 `3d2QGYu2V8DLo)HhyHmzEQzWaoH`
